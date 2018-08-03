@@ -1,0 +1,6 @@
+-I./inst/include/
+-I./src/
+-I/usr/local/include
+-I/Library/Frameworks/R.framework/Headers/
+-I/Library/Frameworks/R.framework/Resources/include
+-I/Library/Frameworks/R.framework/Versions/3.5/Resources/library/Rcpp/include

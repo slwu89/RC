@@ -2,11 +2,11 @@
 % Please edit documentation in R/MCR.R
 \name{logLike_MCRMod}
 \alias{logLike_MCRMod}
-\title{MCR model likelihood (interface to C)}
+\title{MCR model log likelihood (interface to C)}
 \usage{
 logLike_MCRMod(c, pH, prR, sH, sR, sB, GFPp_ym_F, GFPp_yp_F, GFPm_ym_F,
   GFPm_yp_F, GFPp_ym_M, GFPp_yp_M, GFPm_ym_M, GFPm_yp_M, gens)
 }
 \description{
-MCR model likelihood (interface to C)
+MCR model log likelihood (interface to C)
 }

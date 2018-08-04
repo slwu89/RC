@@ -2,5 +2,9 @@
 
 export(logLike_AllExpts)
 export(logLike_MCRMod)
+export(logPosterior)
+export(logPrior)
 useDynLib(RC,C_logLike_AllExpts)
 useDynLib(RC,C_logLike_MCRMod)
+useDynLib(RC,C_logPosterior)
+useDynLib(RC,C_logPrior)

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MCR.R
 \name{logLike_AllExpts}
 \alias{logLike_AllExpts}
-\title{MCR model likelihood for all experiments (interface to C)}
+\title{MCR model log likelihood for all experiments (interface to C)}
 \usage{
 logLike_AllExpts(c, pH, prR, sH, sR, sB, GFPp_ym_1_F, GFPp_yp_1_F, GFPm_ym_1_F,
   GFPm_yp_1_F, GFPp_ym_1_M, GFPp_yp_1_M, GFPm_ym_1_M, GFPm_yp_1_M, GFPp_ym_2_F,
@@ -12,5 +12,5 @@ logLike_AllExpts(c, pH, prR, sH, sR, sB, GFPp_ym_1_F, GFPp_yp_1_F, GFPm_ym_1_F,
   GFPm_yp_4_F, GFPp_ym_4_M, GFPp_yp_4_M, GFPm_ym_4_M, GFPm_yp_4_M, gens)
 }
 \description{
-MCR model likelihood for all experiments (interface to C)
+MCR model log likelihood for all experiments (interface to C)
 }

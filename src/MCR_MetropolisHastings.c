@@ -101,16 +101,20 @@ SEXP C_mcmcMH(SEXP initTheta_R, SEXP proposalSD_R, SEXP numIterations_R,
                                                    GFPp_ym_M_4_R, GFPp_yp_M_4_R, GFPm_ym_M_4_R, GFPm_yp_M_4_R,
                                                    gens_R));
 
+  // printf("logPosteriorThetaCurrent: %f \n",logPosteriorThetaCurrent);
+
   /* number of iterations to run the markov chain */
   int nIter = asInteger(numIterations_R);
 
+  // printf("nIter %i \n",nIter);
+
   /* initialise variables */
-  SEXP c_current = PROTECT(ScalarReal(0.0));
-  SEXP pH_current = PROTECT(ScalarReal(0.0));
-  SEXP prR_current = PROTECT(ScalarReal(0.0));
-  SEXP sH_current = PROTECT(ScalarReal(0.0));
-  SEXP sR_current = PROTECT(ScalarReal(0.0));
-  SEXP sB_current = PROTECT(ScalarReal(0.0));
+  SEXP c_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,0)));
+  SEXP pH_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,1)));
+  SEXP prR_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,2)));
+  SEXP sH_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,3)));
+  SEXP sR_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,4)));
+  SEXP sB_current = PROTECT(ScalarReal(REAL_ELT(initTheta_R,5)));
   protectCalls += 6;
   SEXP samples = PROTECT(allocMatrix(REALSXP,nIter,6));
   protectCalls += 1;
@@ -146,6 +150,8 @@ SEXP C_mcmcMH(SEXP initTheta_R, SEXP proposalSD_R, SEXP numIterations_R,
     sR_proposed = ScalarReal(r_truncnorm(-2,1,asReal(sR_current),sR_sd));
     sB_proposed = ScalarReal(r_truncnorm(-2,1,asReal(sB_current),sB_sd));
 
+    // printf("c_proposed: %f \n",asReal(c_proposed));
+
     /* Evaluate the log posterior function at the proposed theta value: */
     double logPosteriorThetaProposed = asReal(C_logPosterior(c_proposed,pH_proposed,prR_proposed,sH_proposed,sR_proposed,sB_proposed,
                                                       GFPp_ym_F_1_R, GFPp_yp_F_1_R, GFPm_ym_F_1_R, GFPm_yp_F_1_R,
@@ -158,11 +164,18 @@ SEXP C_mcmcMH(SEXP initTheta_R, SEXP proposalSD_R, SEXP numIterations_R,
                                                       GFPp_ym_M_4_R, GFPp_yp_M_4_R, GFPm_ym_M_4_R, GFPm_yp_M_4_R,
                                                       gens_R));
 
+    //  printf("logPosteriorThetaProposed: %f \n",logPosteriorThetaProposed);
+
     /* Compute the Metropolis-Hastings (log) acceptance probability: */
     double logAcceptance = logPosteriorThetaProposed - logPosteriorThetaCurrent;
 
+    // printf("logAcceptance: %f \n",logAcceptance);
+
     /* Use a random number to determine if thetaProposed will be accepted: */
     double randNum = runif(0,1);
+
+    // printf("randNum: %f \n",randNum);
+    // printf("exp(logAcceptance): %f \n",exp(logAcceptance));
 
     /* If accepted, update the thetaCurrent vector, etc.: */
     if(randNum < exp(logAcceptance)){

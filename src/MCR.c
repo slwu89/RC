@@ -257,3 +257,52 @@ SEXP C_logLike_AllExpts(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, S
 
   return ScalarReal(loglike);
 };
+
+/* MCR model likelihood across all experiments (vector of input) */
+SEXP C_logLike_AllExpts_vec(SEXP theta_R,
+                            SEXP GFPp_ym_F_1_R, SEXP GFPp_yp_F_1_R, SEXP GFPm_ym_F_1_R, SEXP GFPm_yp_F_1_R,
+                            SEXP GFPp_ym_M_1_R, SEXP GFPp_yp_M_1_R, SEXP GFPm_ym_M_1_R, SEXP GFPm_yp_M_1_R,
+                            SEXP GFPp_ym_F_2_R, SEXP GFPp_yp_F_2_R, SEXP GFPm_ym_F_2_R, SEXP GFPm_yp_F_2_R,
+                            SEXP GFPp_ym_M_2_R, SEXP GFPp_yp_M_2_R, SEXP GFPm_ym_M_2_R, SEXP GFPm_yp_M_2_R,
+                            SEXP GFPp_ym_F_3_R, SEXP GFPp_yp_F_3_R, SEXP GFPm_ym_F_3_R, SEXP GFPm_yp_F_3_R,
+                            SEXP GFPp_ym_M_3_R, SEXP GFPp_yp_M_3_R, SEXP GFPm_ym_M_3_R, SEXP GFPm_yp_M_3_R,
+                            SEXP GFPp_ym_F_4_R, SEXP GFPp_yp_F_4_R, SEXP GFPm_ym_F_4_R, SEXP GFPm_yp_F_4_R,
+                            SEXP GFPp_ym_M_4_R, SEXP GFPp_yp_M_4_R, SEXP GFPm_ym_M_4_R, SEXP GFPm_yp_M_4_R,
+                            SEXP gens_R){
+
+  int protectCalls = 0;
+
+  SEXP c = PROTECT(ScalarReal(REAL_ELT(theta_R,0)));
+  SEXP pH = PROTECT(ScalarReal(REAL_ELT(theta_R,1)));
+  SEXP prR = PROTECT(ScalarReal(REAL_ELT(theta_R,2)));
+  SEXP sH = PROTECT(ScalarReal(REAL_ELT(theta_R,3)));
+  SEXP sR = PROTECT(ScalarReal(REAL_ELT(theta_R,4)));
+  SEXP sB = PROTECT(ScalarReal(REAL_ELT(theta_R,5)));
+
+  protectCalls += 6;
+
+  double loglike = 0.0;
+
+  loglike += asReal(C_logLike_MCRMod(c,pH,prR,sH,sR,sB,
+                                     GFPp_ym_F_1_R,GFPp_yp_F_1_R,GFPm_ym_F_1_R,GFPm_yp_F_1_R,
+                                     GFPp_ym_M_1_R,GFPp_yp_M_1_R,GFPm_ym_M_1_R,GFPm_yp_M_1_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c,pH,prR,sH,sR,sB,
+                                     GFPp_ym_F_2_R,GFPp_yp_F_2_R,GFPm_ym_F_2_R,GFPm_yp_F_2_R,
+                                     GFPp_ym_M_2_R,GFPp_yp_M_2_R,GFPm_ym_M_2_R,GFPm_yp_M_2_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c,pH,prR,sH,sR,sB,
+                                     GFPp_ym_F_3_R,GFPp_yp_F_3_R,GFPm_ym_F_3_R,GFPm_yp_F_3_R,
+                                     GFPp_ym_M_3_R,GFPp_yp_M_3_R,GFPm_ym_M_3_R,GFPm_yp_M_3_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c,pH,prR,sH,sR,sB,
+                                     GFPp_ym_F_4_R,GFPp_yp_F_4_R,GFPm_ym_F_4_R,GFPm_yp_F_4_R,
+                                     GFPp_ym_M_4_R,GFPp_yp_M_4_R,GFPm_ym_M_4_R,GFPm_yp_M_4_R,
+                                     gens_R));
+
+  UNPROTECT(protectCalls);
+  return ScalarReal(loglike);
+};

@@ -15,41 +15,41 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   double sR = asReal(sR_R);
   double sB = asReal(sB_R);
 
-  printf("c: %f, pH: %f, prR: %f, sH: %f, sR: %f, sB: %f \n",c,pH,prR,sH,sR,sB);
+  // printf("c: %f, pH: %f, prR: %f, sH: %f, sR: %f, sB: %f \n",c,pH,prR,sH,sR,sB);
 
   /* number of generations to run simulation */
   int gens = asInteger(gens_R);
 
-  printf("gens: %i\n",gens);
+  // printf("gens: %i\n",gens);
 
   /* derived parameters */
   double pR = (1.0 - pH)*prR;
   double pB = (1.0 - pH)*(1.0 - prR);
 
-  printf("pR: %f, pB: %f\n",pR,pB);
+  // printf("pR: %f, pB: %f\n",pR,pB);
 
   /* vectors of total populations */
   int flen = length(GFPp_ym_F_R);
-  printf("flen: %i\n",flen);
+  // printf("flen: %i\n",flen);
   double Total_F[flen];
   double* GFPp_ym_F_R_ptr = REAL(GFPp_ym_F_R);
   double* GFPp_yp_F_R_ptr = REAL(GFPp_yp_F_R);
   double* GFPm_ym_F_R_ptr = REAL(GFPm_ym_F_R);
   double* GFPm_yp_F_R_ptr = REAL(GFPm_yp_F_R);
   for(int i=0; i <flen; i++){
-    printf("i: %i, assigning to Total_F to: %f ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
+    // printf("i: %i, assigning to Total_F to: %f ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
     Total_F[i] = GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i];
   }
 
   int mlen = length(GFPp_ym_M_R);
-  printf("\nmlen: %i\n",mlen);
+  // printf("\nmlen: %i\n",mlen);
   double Total_M[mlen];
   double* GFPp_ym_M_R_ptr = REAL(GFPp_ym_M_R);
   double* GFPp_yp_M_R_ptr = REAL(GFPp_yp_M_R);
   double* GFPm_ym_M_R_ptr = REAL(GFPm_ym_M_R);
   double* GFPm_yp_M_R_ptr = REAL(GFPm_yp_M_R);
   for(int i=0; i <mlen; i++){
-    printf("i: %i, assigning to Total_M to: %f ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
+    // printf("i: %i, assigning to Total_M to: %f ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
     Total_M[i] = GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i];
   }
 
@@ -60,7 +60,7 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
     Total[i] = Total_F[i] + Total_M[i];
   }
 
-  printf("\ndone assigning Total\n");
+  // printf("\ndone assigning Total\n");
 
   /* initial genotype numbers */
   double HY[(gens+1)];
@@ -111,7 +111,7 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   double GFPm_yp_M_Pred[(gens+1)];
   GFPm_yp_M_Pred[0] = RY[0] + WY[0];
 
-  printf("starting dynamic model!");
+  // printf("starting dynamic model!");
 
   /* poulation dynamic model */
   for(int i=1; i < (gens+1); i++){
@@ -211,6 +211,44 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
       GFPm_ym_M_R_ptr[i]*log(fmax(GFPm_ym_M_Pred[i+1],1e-10)) +
       GFPm_yp_M_R_ptr[i]*log(fmax(GFPm_yp_M_Pred[i+1],1e-10));
   }
+
+  return ScalarReal(loglike);
+};
+
+
+/* MCR model likelihood across all experiments */
+SEXP C_logLike_AllExpts(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEXP sB_R,
+                        SEXP GFPp_ym_F_1_R, SEXP GFPp_yp_F_1_R, SEXP GFPm_ym_F_1_R, SEXP GFPm_yp_F_1_R,
+                        SEXP GFPp_ym_M_1_R, SEXP GFPp_yp_M_1_R, SEXP GFPm_ym_M_1_R, SEXP GFPm_yp_M_1_R,
+                        SEXP GFPp_ym_F_2_R, SEXP GFPp_yp_F_2_R, SEXP GFPm_ym_F_2_R, SEXP GFPm_yp_F_2_R,
+                        SEXP GFPp_ym_M_2_R, SEXP GFPp_yp_M_2_R, SEXP GFPm_ym_M_2_R, SEXP GFPm_yp_M_2_R,
+                        SEXP GFPp_ym_F_3_R, SEXP GFPp_yp_F_3_R, SEXP GFPm_ym_F_3_R, SEXP GFPm_yp_F_3_R,
+                        SEXP GFPp_ym_M_3_R, SEXP GFPp_yp_M_3_R, SEXP GFPm_ym_M_3_R, SEXP GFPm_yp_M_3_R,
+                        SEXP GFPp_ym_F_4_R, SEXP GFPp_yp_F_4_R, SEXP GFPm_ym_F_4_R, SEXP GFPm_yp_F_4_R,
+                        SEXP GFPp_ym_M_4_R, SEXP GFPp_yp_M_4_R, SEXP GFPm_ym_M_4_R, SEXP GFPm_yp_M_4_R,
+                        SEXP gens_R){
+
+  double loglike = 0.0;
+
+  loglike += asReal(C_logLike_MCRMod(c_R,pH_R,prR_R,sH_R,sR_R,sB_R,
+                                     GFPp_ym_F_1_R,GFPp_yp_F_1_R,GFPm_ym_F_1_R,GFPm_yp_F_1_R,
+                                     GFPp_ym_M_1_R,GFPp_yp_M_1_R,GFPm_ym_M_1_R,GFPm_yp_M_1_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c_R,pH_R,prR_R,sH_R,sR_R,sB_R,
+                                     GFPp_ym_F_2_R,GFPp_yp_F_2_R,GFPm_ym_F_2_R,GFPm_yp_F_2_R,
+                                     GFPp_ym_M_2_R,GFPp_yp_M_2_R,GFPm_ym_M_2_R,GFPm_yp_M_2_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c_R,pH_R,prR_R,sH_R,sR_R,sB_R,
+                                     GFPp_ym_F_3_R,GFPp_yp_F_3_R,GFPm_ym_F_3_R,GFPm_yp_F_3_R,
+                                     GFPp_ym_M_3_R,GFPp_yp_M_3_R,GFPm_ym_M_3_R,GFPm_yp_M_3_R,
+                                     gens_R));
+
+  loglike += asReal(C_logLike_MCRMod(c_R,pH_R,prR_R,sH_R,sR_R,sB_R,
+                                     GFPp_ym_F_4_R,GFPp_yp_F_4_R,GFPm_ym_F_4_R,GFPm_yp_F_4_R,
+                                     GFPp_ym_M_4_R,GFPp_yp_M_4_R,GFPm_ym_M_4_R,GFPm_yp_M_4_R,
+                                     gens_R));
 
   return ScalarReal(loglike);
 };

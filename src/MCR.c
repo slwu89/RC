@@ -1,3 +1,8 @@
+/* ##################################################
+#   MCR (Mutagenic Chain Reaction) likelihood function
+#   Sean Wu
+################################################## */
+
 #include "MCR.h"
 
 /* MCR model likelihood */

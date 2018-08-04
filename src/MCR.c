@@ -15,30 +15,41 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   double sR = asReal(sR_R);
   double sB = asReal(sB_R);
 
+  printf("c: %f, pH: %f, prR: %f, sH: %f, sR: %f, sB: %f \n",c,pH,prR,sH,sR,sB);
+
+  /* number of generations to run simulation */
   int gens = asInteger(gens_R);
+
+  printf("gens: %i\n",gens);
 
   /* derived parameters */
   double pR = (1.0 - pH)*prR;
   double pB = (1.0 - pH)*(1.0 - prR);
 
+  printf("pR: %f, pB: %f\n",pR,pB);
+
   /* vectors of total populations */
   int flen = length(GFPp_ym_F_R);
+  printf("flen: %i\n",flen);
   int Total_F[flen];
   int* GFPp_ym_F_R_ptr = INTEGER(GFPp_ym_F_R);
   int* GFPp_yp_F_R_ptr = INTEGER(GFPp_yp_F_R);
   int* GFPm_ym_F_R_ptr = INTEGER(GFPm_ym_F_R);
   int* GFPm_yp_F_R_ptr = INTEGER(GFPm_yp_F_R);
   for(int i=0; i <flen; i++){
+    printf("i: %i, assigning to Total_F to: %i ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
     Total_F[i] = GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i];
   }
 
   int mlen = length(GFPp_ym_M_R);
+  printf("\nmlen: %i\n",mlen);
   int Total_M[mlen];
   int* GFPp_ym_M_R_ptr = INTEGER(GFPp_ym_M_R);
   int* GFPp_yp_M_R_ptr = INTEGER(GFPp_yp_M_R);
   int* GFPm_ym_M_R_ptr = INTEGER(GFPm_ym_M_R);
   int* GFPm_yp_M_R_ptr = INTEGER(GFPm_yp_M_R);
   for(int i=0; i <mlen; i++){
+    printf("i: %i, assigning to Total_M to: %i ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
     Total_M[i] = GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i];
   }
 
@@ -48,6 +59,8 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   for(int i=0; i<mlen; i++){
     Total[i] = Total_F[i] + Total_M[i];
   }
+
+  printf("\ndone assigning Total\n");
 
   /* initial genotype numbers */
   double HY[(gens+1)];
@@ -98,77 +111,79 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   double GFPm_yp_M_Pred[(gens+1)];
   GFPm_yp_M_Pred[0] = RY[0] + WY[0];
 
+  printf("starting dynamic model!");
+
   /* poulation dynamic model */
   for(int i=1; i < (gens+1); i++){
 
     /* daily updating populations */
-    int HY_Temp = 0.5*HY[i-1]*HH[i-1] + 0.5*RY[i-1]*HH[i-1] + 0.5*BY[i-1]*HH[i-1] + 0.5*WY[i-1]*HH[i-1] +
+    double HY_Temp = 0.5*HY[i-1]*HH[i-1] + 0.5*RY[i-1]*HH[i-1] + 0.5*BY[i-1]*HH[i-1] + 0.5*WY[i-1]*HH[i-1] +
       0.25*HY[i-1]*HR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*WY[i-1]*HR[i-1] +
       0.25*HY[i-1]*HB[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*WY[i-1]*HB[i-1] +
       0.25*(1 + c*pH)*HY[i-1]*HW[i-1] + 0.25*(1 + c*pH)*RY[i-1]*HW[i-1] + 0.25*(1 + c*pH)*BY[i-1]*HW[i-1] + 0.25*(1 + c*pH)*WY[i-1]*HW[i-1];
 
-    int RY_Temp = 0.5*HY[i-1]*RR[i-1] + 0.5*RY[i-1]*RR[i-1] + 0.5*BY[i-1]*RR[i-1] + 0.5*WY[i-1]*RR[i-1] +
+    double RY_Temp = 0.5*HY[i-1]*RR[i-1] + 0.5*RY[i-1]*RR[i-1] + 0.5*BY[i-1]*RR[i-1] + 0.5*WY[i-1]*RR[i-1] +
       0.25*HY[i-1]*HR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*WY[i-1]*HR[i-1] +
       0.25*HY[i-1]*RB[i-1] + 0.25*RY[i-1]*RB[i-1] + 0.25*BY[i-1]*RB[i-1] + 0.25*WY[i-1]*RB[i-1] +
       0.25*HY[i-1]*RW[i-1] + 0.25*RY[i-1]*RW[i-1] + 0.25*BY[i-1]*RW[i-1] + 0.25*WY[i-1]*RW[i-1] +
       0.25*c*pR*HY[i-1]*HW[i-1] + 0.25*c*pR*RY[i-1]*HW[i-1] + 0.25*c*pR*BY[i-1]*HW[i-1] + 0.25*c*pR*WY[i-1]*HW[i-1];
 
-    int BY_Temp = 0.5*HY[i-1]*BB[i-1] + 0.5*RY[i-1]*BB[i-1] + 0.5*BY[i-1]*BB[i-1] + 0.5*WY[i-1]*BB[i-1] +
+    double BY_Temp = 0.5*HY[i-1]*BB[i-1] + 0.5*RY[i-1]*BB[i-1] + 0.5*BY[i-1]*BB[i-1] + 0.5*WY[i-1]*BB[i-1] +
       0.25*HY[i-1]*HB[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*WY[i-1]*HB[i-1] +
       0.25*HY[i-1]*RB[i-1] + 0.25*RY[i-1]*RB[i-1] + 0.25*BY[i-1]*RB[i-1] + 0.25*WY[i-1]*RB[i-1] +
       0.25*HY[i-1]*BW[i-1] + 0.25*RY[i-1]*BW[i-1] + 0.25*BY[i-1]*BW[i-1] + 0.25*WY[i-1]*BW[i-1] +
       0.25*c*pB*HY[i-1]*HW[i-1] + 0.25*c*pB*RY[i-1]*HW[i-1] + 0.25*c*pB*BY[i-1]*HW[i-1] + 0.25*c*pB*WY[i-1]*HW[i-1];
 
-    int WY_Temp = 0.5*HY[i-1]*WW[i-1] + 0.5*RY[i-1]*WW[i-1] + 0.5*BY[i-1]*WW[i-1] + 0.5*WY[i-1]*WW[i-1] +
+    double WY_Temp = 0.5*HY[i-1]*WW[i-1] + 0.5*RY[i-1]*WW[i-1] + 0.5*BY[i-1]*WW[i-1] + 0.5*WY[i-1]*WW[i-1] +
       0.25*HY[i-1]*RW[i-1] + 0.25*RY[i-1]*RW[i-1] + 0.25*BY[i-1]*RW[i-1] + 0.25*WY[i-1]*RW[i-1] +
       0.25*HY[i-1]*BW[i-1] + 0.25*RY[i-1]*BW[i-1] + 0.25*BY[i-1]*BW[i-1] + 0.25*WY[i-1]*BW[i-1] +
       0.25*(1 - c)*HY[i-1]*HW[i-1] + 0.25*(1 - c)*RY[i-1]*HW[i-1] + 0.25*(1 - c)*BY[i-1]*HW[i-1] + 0.25*(1 - c)*WY[i-1]*HW[i-1];
 
-    int HH_Temp = 0.5*HY[i-1]*HH[i-1] + 0.25*HY[i-1]*HR[i-1] + 0.25*HY[i-1]*HB[i-1] + 0.25*(1 + c*pH)*HY[i-1]*HW[i-1];
+    double HH_Temp = 0.5*HY[i-1]*HH[i-1] + 0.25*HY[i-1]*HR[i-1] + 0.25*HY[i-1]*HB[i-1] + 0.25*(1 + c*pH)*HY[i-1]*HW[i-1];
 
-    int HR_Temp = 0.5*RY[i-1]*HH[i-1] + 0.25*HY[i-1]*HR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*c*pR*HY[i-1]*HW[i-1] +
+    double HR_Temp = 0.5*RY[i-1]*HH[i-1] + 0.25*HY[i-1]*HR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*c*pR*HY[i-1]*HW[i-1] +
       0.25*(1 + c*pH)*RY[i-1]*HW[i-1] + 0.5*HY[i-1]*RR[i-1] + 0.25*HY[i-1]*RB[i-1] + 0.25*HY[i-1]*RW[i-1];
 
-    int HB_Temp = 0.5*BY[i-1]*HH[i-1] + 0.25*HY[i-1]*HB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*c*pB*HY[i-1]*HW[i-1] +
+    double HB_Temp = 0.5*BY[i-1]*HH[i-1] + 0.25*HY[i-1]*HB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*c*pB*HY[i-1]*HW[i-1] +
       0.25*(1 + c*pH)*BY[i-1]*HW[i-1] + 0.5*HY[i-1]*BB[i-1] + 0.25*HY[i-1]*RB[i-1] + 0.25*HY[i-1]*BW[i-1];
 
-    int HW_Temp = 0.5*WY[i-1]*HH[i-1] + 0.25*(1 - c)*HY[i-1]*HW[i-1] + 0.25*(1 + c*pH)*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HR[i-1] +
+    double HW_Temp = 0.5*WY[i-1]*HH[i-1] + 0.25*(1 - c)*HY[i-1]*HW[i-1] + 0.25*(1 + c*pH)*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HR[i-1] +
       0.5*HY[i-1]*WW[i-1] + 0.25*HY[i-1]*RW[i-1] + 0.25*HY[i-1]*BW[i-1] + 0.25*WY[i-1]*HB[i-1];
 
-    int RR_Temp = 0.5*RY[i-1]*RR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*RY[i-1]*RB[i-1] + 0.25*RY[i-1]*RW[i-1] + 0.25*c*pR*RY[i-1]*HW[i-1];
+    double RR_Temp = 0.5*RY[i-1]*RR[i-1] + 0.25*RY[i-1]*HR[i-1] + 0.25*RY[i-1]*RB[i-1] + 0.25*RY[i-1]*RW[i-1] + 0.25*c*pR*RY[i-1]*HW[i-1];
 
-    int RB_Temp = 0.5*BY[i-1]*RR[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*BY[i-1]*RW[i-1] + 0.25*c*pB*RY[i-1]*HW[i-1] +
+    double RB_Temp = 0.5*BY[i-1]*RR[i-1] + 0.25*RY[i-1]*HB[i-1] + 0.25*BY[i-1]*HR[i-1] + 0.25*BY[i-1]*RW[i-1] + 0.25*c*pB*RY[i-1]*HW[i-1] +
       0.5*RY[i-1]*BB[i-1] + 0.25*RY[i-1]*RB[i-1] + 0.25*RY[i-1]*BW[i-1] + 0.25*BY[i-1]*RB[i-1] + 0.25*c*pR*BY[i-1]*HW[i-1];
 
-    int RW_Temp = 0.5*WY[i-1]*RR[i-1] + 0.25*(1 - c)*RY[i-1]*HW[i-1] + 0.25*c*pR*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HR[i-1] +
+    double RW_Temp = 0.5*WY[i-1]*RR[i-1] + 0.25*(1 - c)*RY[i-1]*HW[i-1] + 0.25*c*pR*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HR[i-1] +
       0.5*RY[i-1]*WW[i-1] + 0.25*RY[i-1]*RW[i-1] + 0.25*RY[i-1]*BW[i-1] + 0.25*WY[i-1]*RB[i-1] + 0.25*WY[i-1]*RW[i-1];
 
-    int BB_Temp = 0.5*BY[i-1]*BB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*BY[i-1]*RB[i-1] + 0.25*BY[i-1]*BW[i-1] + 0.25*c*pB*BY[i-1]*HW[i-1];
+    double BB_Temp = 0.5*BY[i-1]*BB[i-1] + 0.25*BY[i-1]*HB[i-1] + 0.25*BY[i-1]*RB[i-1] + 0.25*BY[i-1]*BW[i-1] + 0.25*c*pB*BY[i-1]*HW[i-1];
 
-    int BW_Temp = 0.5*WY[i-1]*BB[i-1] + 0.25*(1 - c)*BY[i-1]*HW[i-1] + 0.25*c*pB*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HB[i-1] +
+    double BW_Temp = 0.5*WY[i-1]*BB[i-1] + 0.25*(1 - c)*BY[i-1]*HW[i-1] + 0.25*c*pB*WY[i-1]*HW[i-1] + 0.25*WY[i-1]*HB[i-1] +
       0.5*BY[i-1]*WW[i-1] + 0.25*BY[i-1]*BW[i-1] + 0.25*BY[i-1]*RW[i-1] + 0.25*WY[i-1]*RB[i-1] + 0.25*WY[i-1]*BW[i-1];
 
-    int WW_Temp = 0.5*WY[i-1]*WW[i-1] + 0.25*WY[i-1]*RW[i-1] + 0.25*WY[i-1]*BW[i-1] + 0.25*(1 - c)*WY[i-1]*HW[i-1];
+    double WW_Temp = 0.5*WY[i-1]*WW[i-1] + 0.25*WY[i-1]*RW[i-1] + 0.25*WY[i-1]*BW[i-1] + 0.25*(1 - c)*WY[i-1]*HW[i-1];
 
-    int W = (1-sH)*HY_Temp + (1-sR)*RY_Temp + (1-sB)*BY_Temp + WY_Temp +
+    double W = (1-sH)*HY_Temp + (1-sR)*RY_Temp + (1-sB)*BY_Temp + WY_Temp +
       (1-sH)*(1-sH)*HH_Temp + (1-sH)*(1-sR)*HR_Temp + (1-sH)*(1-sB)*HB_Temp +
       (1-sH)*HW_Temp + (1-sR)*(1-sR)*RR_Temp + (1-sR)*(1-sB)*RB_Temp +
       (1-sR)*RW_Temp + (1-sB)*(1-sB)*BB_Temp + (1-sB)*BW_Temp + WW_Temp;
 
     /* push back into population arrays */
-    HY[i] = (1-sH)*HY_Temp/W;
-    RY[i] = (1-sR)*RY_Temp/W;
-    BY[i] = (1-sB)*BY_Temp/W;
+    HY[i] = (1.0-sH)*HY_Temp/W;
+    RY[i] = (1.0-sR)*RY_Temp/W;
+    BY[i] = (1.0-sB)*BY_Temp/W;
     WY[i] = WY_Temp/W;
-    HH[i] = (1-sH)*(1-sH)*HH_Temp/W;
-    HR[i] = (1-sH)*(1-sR)*HR_Temp/W;
-    HB[i] = (1-sH)*(1-sB)*HB_Temp/W;
-    HW[i] = (1-sH)*HW_Temp/W;
-    RR[i] = (1-sR)*(1-sR)*RR_Temp/W;
-    RB[i] = (1-sR)*(1-sB)*RB_Temp/W;
-    RW[i] = (1-sR)*RW_Temp/W;
-    BB[i] = (1-sB)*(1-sB)*BB_Temp/W;
-    BW[i] = (1-sB)*BW_Temp/W;
+    HH[i] = (1.0-sH)*(1.0-sH)*HH_Temp/W;
+    HR[i] = (1.0-sH)*(1.0-sR)*HR_Temp/W;
+    HB[i] = (1.0-sH)*(1.0-sB)*HB_Temp/W;
+    HW[i] = (1.0-sH)*HW_Temp/W;
+    RR[i] = (1.0-sR)*(1.0-sR)*RR_Temp/W;
+    RB[i] = (1.0-sR)*(1.0-sB)*RB_Temp/W;
+    RW[i] = (1.0-sR)*RW_Temp/W;
+    BB[i] = (1.0-sB)*(1.0-sB)*BB_Temp/W;
+    BW[i] = (1.0-sB)*BW_Temp/W;
     WW[i] = WW_Temp/W;
 
     GFPp_ym_F_Pred[i] = HH[i] + HB[i] + HW[i];

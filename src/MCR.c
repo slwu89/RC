@@ -31,31 +31,31 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   /* vectors of total populations */
   int flen = length(GFPp_ym_F_R);
   printf("flen: %i\n",flen);
-  int Total_F[flen];
-  int* GFPp_ym_F_R_ptr = INTEGER(GFPp_ym_F_R);
-  int* GFPp_yp_F_R_ptr = INTEGER(GFPp_yp_F_R);
-  int* GFPm_ym_F_R_ptr = INTEGER(GFPm_ym_F_R);
-  int* GFPm_yp_F_R_ptr = INTEGER(GFPm_yp_F_R);
+  double Total_F[flen];
+  double* GFPp_ym_F_R_ptr = REAL(GFPp_ym_F_R);
+  double* GFPp_yp_F_R_ptr = REAL(GFPp_yp_F_R);
+  double* GFPm_ym_F_R_ptr = REAL(GFPm_ym_F_R);
+  double* GFPm_yp_F_R_ptr = REAL(GFPm_yp_F_R);
   for(int i=0; i <flen; i++){
-    printf("i: %i, assigning to Total_F to: %i ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
+    printf("i: %i, assigning to Total_F to: %f ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
     Total_F[i] = GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i];
   }
 
   int mlen = length(GFPp_ym_M_R);
   printf("\nmlen: %i\n",mlen);
-  int Total_M[mlen];
-  int* GFPp_ym_M_R_ptr = INTEGER(GFPp_ym_M_R);
-  int* GFPp_yp_M_R_ptr = INTEGER(GFPp_yp_M_R);
-  int* GFPm_ym_M_R_ptr = INTEGER(GFPm_ym_M_R);
-  int* GFPm_yp_M_R_ptr = INTEGER(GFPm_yp_M_R);
+  double Total_M[mlen];
+  double* GFPp_ym_M_R_ptr = REAL(GFPp_ym_M_R);
+  double* GFPp_yp_M_R_ptr = REAL(GFPp_yp_M_R);
+  double* GFPm_ym_M_R_ptr = REAL(GFPm_ym_M_R);
+  double* GFPm_yp_M_R_ptr = REAL(GFPm_yp_M_R);
   for(int i=0; i <mlen; i++){
-    printf("i: %i, assigning to Total_M to: %i ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
+    printf("i: %i, assigning to Total_M to: %f ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
     Total_M[i] = GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i];
   }
 
   if(mlen != flen){error("lengths of male and female vectors not the same!");}
 
-  int Total[mlen];
+  double Total[mlen];
   for(int i=0; i<mlen; i++){
     Total[i] = Total_F[i] + Total_M[i];
   }

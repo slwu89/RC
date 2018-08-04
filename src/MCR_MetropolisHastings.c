@@ -188,10 +188,12 @@ SEXP C_mcmcMH(SEXP initTheta_R, SEXP proposalSD_R, SEXP numIterations_R,
     SET_REAL_ELT(samples,i+5*nIter,asReal(sB_current));
 
     /* progress bar */
-    if(i % 10 == 0){
+    if(i % 100 == 0){
       printProgress((double)i/nIter);
     }
   }
+
+  printProgress(1.0);
 
   /* stop using R's PRNG */
   PutRNGstate();

@@ -14,7 +14,7 @@ logLike_MCRMod <- function(c, pH, prR, sH, sR, sB,
   .Call(C_logLike_MCRMod,as.double(c),as.double(pH),as.double(prR),as.double(sH),as.double(sR),as.double(sB),
          as.double(GFPp_ym_F),as.double(GFPp_yp_F),as.double(GFPm_ym_F),as.double(GFPm_yp_F),
          as.double(GFPp_ym_M),as.double(GFPp_yp_M),as.double(GFPm_ym_M),as.double(GFPm_yp_M),
-         as.double(gens))
+         as.integer(gens))
 }
 
 
@@ -41,7 +41,7 @@ logLike_AllExpts <- function(c, pH, prR, sH, sR, sB,
         as.double(GFPp_ym_3_M),as.double(GFPp_yp_3_M),as.double(GFPm_ym_3_M),as.double(GFPm_yp_3_M),
         as.double(GFPp_ym_4_F),as.double(GFPp_yp_4_F),as.double(GFPm_ym_4_F),as.double(GFPm_yp_4_F),
         as.double(GFPp_ym_4_M),as.double(GFPp_yp_4_M),as.double(GFPm_ym_4_M),as.double(GFPm_yp_4_M),
-        as.double(gens))
+        as.integer(gens))
 }
 
 #' MCR model log prior distribution (interface to C)
@@ -75,5 +75,31 @@ logPosterior <- function(c, pH, prR, sH, sR, sB,
         as.double(GFPp_ym_3_M),as.double(GFPp_yp_3_M),as.double(GFPm_ym_3_M),as.double(GFPm_yp_3_M),
         as.double(GFPp_ym_4_F),as.double(GFPp_yp_4_F),as.double(GFPm_ym_4_F),as.double(GFPm_yp_4_F),
         as.double(GFPp_ym_4_M),as.double(GFPp_yp_4_M),as.double(GFPm_ym_4_M),as.double(GFPm_yp_4_M),
-        as.double(gens))
+        as.integer(gens))
+}
+
+#' MCR model Random Walk Metropolis-Hastings MCMC (interface to C)
+#'
+#' @useDynLib RC C_mcmcMH
+#' @export
+mcmcMH <- function(initTheta, proposalSD, numIterations,
+                   GFPp_ym_F_1, GFPp_yp_F_1, GFPm_ym_F_1, GFPm_yp_F_1,
+                   GFPp_ym_M_1, GFPp_yp_M_1, GFPm_ym_M_1, GFPm_yp_M_1,
+                   GFPp_ym_F_2, GFPp_yp_F_2, GFPm_ym_F_2, GFPm_yp_F_2,
+                   GFPp_ym_M_2, GFPp_yp_M_2, GFPm_ym_M_2, GFPm_yp_M_2,
+                   GFPp_ym_F_3, GFPp_yp_F_3, GFPm_ym_F_3, GFPm_yp_F_3,
+                   GFPp_ym_M_3, GFPp_yp_M_3, GFPm_ym_M_3, GFPm_yp_M_3,
+                   GFPp_ym_F_4, GFPp_yp_F_4, GFPm_ym_F_4, GFPm_yp_F_4,
+                   GFPp_ym_M_4, GFPp_yp_M_4, GFPm_ym_M_4, GFPm_yp_M_4,
+                   gens){
+  .Call(C_mcmcMH,as.double(initTheta),as.double(proposalSD),as.integer(numIterations),
+        as.double(GFPp_ym_1_F),as.double(GFPp_yp_1_F),as.double(GFPm_ym_1_F),as.double(GFPm_yp_1_F),
+        as.double(GFPp_ym_1_M),as.double(GFPp_yp_1_M),as.double(GFPm_ym_1_M),as.double(GFPm_yp_1_M),
+        as.double(GFPp_ym_2_F),as.double(GFPp_yp_2_F),as.double(GFPm_ym_2_F),as.double(GFPm_yp_2_F),
+        as.double(GFPp_ym_2_M),as.double(GFPp_yp_2_M),as.double(GFPm_ym_2_M),as.double(GFPm_yp_2_M),
+        as.double(GFPp_ym_3_F),as.double(GFPp_yp_3_F),as.double(GFPm_ym_3_F),as.double(GFPm_yp_3_F),
+        as.double(GFPp_ym_3_M),as.double(GFPp_yp_3_M),as.double(GFPm_ym_3_M),as.double(GFPm_yp_3_M),
+        as.double(GFPp_ym_4_F),as.double(GFPp_yp_4_F),as.double(GFPm_ym_4_F),as.double(GFPm_yp_4_F),
+        as.double(GFPp_ym_4_M),as.double(GFPp_yp_4_M),as.double(GFPm_ym_4_M),as.double(GFPm_yp_4_M),
+        as.integer(gens))
 }

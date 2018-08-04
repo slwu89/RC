@@ -13,6 +13,7 @@
  /* R's C API */
 #include <R.h>
 #include <Rinternals.h>
+#include <R_ext/Utils.h>
 #include <Rmath.h>
 
 /* for progress bar */

@@ -203,6 +203,7 @@ SEXP C_mcmcMH(SEXP initTheta_R, SEXP proposalSD_R, SEXP numIterations_R,
     /* progress bar */
     if(i % 100 == 0){
       printProgress((double)i/nIter);
+      R_CheckUserInterrupt();
     }
   }
 

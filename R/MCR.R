@@ -46,6 +46,8 @@ logLike_AllExpts <- function(c, pH, prR, sH, sR, sB,
 
 #' MCR model log likelihood for all experiments with vector of parameters (interface to C)
 #'
+#' @param neg if \code{TRUE}, return negative log-likelihood (for minimization algorithms); otherwise return log-likelihood (for maximization)
+#'
 #' @useDynLib RC C_logLike_AllExpts_vec
 #' @export
 logLike_AllExpts_vec <- function(theta,
@@ -57,8 +59,8 @@ logLike_AllExpts_vec <- function(theta,
                              GFPp_ym_3_M, GFPp_yp_3_M, GFPm_ym_3_M, GFPm_yp_3_M,
                              GFPp_ym_4_F, GFPp_yp_4_F, GFPm_ym_4_F, GFPm_yp_4_F,
                              GFPp_ym_4_M, GFPp_yp_4_M, GFPm_ym_4_M, GFPm_yp_4_M,
-                             gens){
-  .Call(C_logLike_AllExpts_vec,as.double(theta),
+                             gens,neg=FALSE){
+  out <- .Call(C_logLike_AllExpts_vec,as.double(theta),
         as.double(GFPp_ym_1_F),as.double(GFPp_yp_1_F),as.double(GFPm_ym_1_F),as.double(GFPm_yp_1_F),
         as.double(GFPp_ym_1_M),as.double(GFPp_yp_1_M),as.double(GFPm_ym_1_M),as.double(GFPm_yp_1_M),
         as.double(GFPp_ym_2_F),as.double(GFPp_yp_2_F),as.double(GFPm_ym_2_F),as.double(GFPm_yp_2_F),
@@ -68,6 +70,11 @@ logLike_AllExpts_vec <- function(theta,
         as.double(GFPp_ym_4_F),as.double(GFPp_yp_4_F),as.double(GFPm_ym_4_F),as.double(GFPm_yp_4_F),
         as.double(GFPp_ym_4_M),as.double(GFPp_yp_4_M),as.double(GFPm_ym_4_M),as.double(GFPm_yp_4_M),
         as.integer(gens))
+  if(neg){
+    return(-1 * out)
+  } else {
+    return(out)
+  }
 }
 
 

@@ -9,3 +9,32 @@ find_var(env, var)
 \description{
 Look up a symbol in an environment and print it
 }
+\examples{
+\dontrun{
+library(R6)
+Person <- R6Class("Person",
+                  public = list(
+                    name = NULL,
+                    hair = NULL,
+                    initialize = function(name = NA, hair = NA) {
+                      self$name <- name
+                      self$hair <- hair
+                      self$greet()
+                    },
+                    set_hair = function(val) {
+                      self$hair <- val
+                    },
+                    greet = function() {
+                      cat(paste0("Hello, my name is ", self$name, ".\\n"))
+                    },
+                    greet2 = function(){
+                      RC::find_var(private,"z")
+                    }
+                  ),
+                  private = list(z=5)
+)
+
+x <- Person$new("bob","black")
+x$greet2()
+}
+}

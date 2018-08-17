@@ -5,7 +5,7 @@
 
 #include "R6_test.h"
 
- /* simple function to find public things in R6 objects */
+ /* simple function to find public things in environments and print them */
 SEXP find_var_C(SEXP env, SEXP sym, SEXP rho){
 
   size_t pCalls = 0;

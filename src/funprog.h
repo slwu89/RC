@@ -1,10 +1,10 @@
 /* ##################################################
-#   Testing C code for R6 objects
+#   Functional Programming tidbits
 #   Sean Wu
 ################################################## */
 
-#ifndef R6_H
-#define R6_H
+#ifndef FUNPROG_H
+#define FUNPROG_H
 
  /* C headers */
 #include <stdio.h>
@@ -15,7 +15,7 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
-/* simple function to find things in environments and print them */
-SEXP find_var_C(SEXP env, SEXP sym, SEXP rho);
+/* simple version of Reduce (see http://adv-r.had.co.nz/Functionals.html#functionals-fp) */
+SEXP Reduce_Simple_C(SEXP f, SEXP x, SEXP rho);
 
 #endif

@@ -21,7 +21,7 @@ SEXP Reduce_Simple_C(SEXP f, SEXP x, SEXP rho){
   SEXP outSym  = PROTECT(install("out"));
   SEXP outVal =  PROTECT(VECTOR_ELT(x,0));
   defineVar(outSym,outVal,rho);
-  Rprintf("out is now: %i\n",asInteger(outVal));
+  //Rprintf("out is now: %i\n",asInteger(outVal));
   pCalls += 2;
 
   /* make a symbol-value for the "i" part of [[i]] */
@@ -36,12 +36,13 @@ SEXP Reduce_Simple_C(SEXP f, SEXP x, SEXP rho){
   pCalls += 2;
 
   Rprintf("starting the loop\n");
-  for(int i=1; i<=n; ++i){
+  for(int i=2; i<=n; ++i){
     INTEGER(iVal)[0] = i;
-    defineVar(iSym,iVal,rho);
     Rprintf("we are at INTEGER(iVal)[0]: %i\n",INTEGER(iVal)[0]);
+    //SETCADDR(R_fcall,bracket);
     outVal = eval(R_fcall,rho);
-    Rprintf("out is now: %i\n",asInteger(outVal));
+    defineVar(outSym,outVal,rho);
+    //Rprintf("out is now: %i\n",asInteger(outVal));
   }
 
   UNPROTECT(pCalls);

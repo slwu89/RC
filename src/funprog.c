@@ -23,10 +23,10 @@ SEXP Reduce_Simple_C(SEXP f, SEXP x, SEXP rho){
 
   /* make the part to do: f(out, x[[i]]) */
   SEXP bracket = PROTECT(LCONS(R_Bracket2Symbol, LCONS(x, LCONS(ii, R_NilValue)))); /* x[[i]] */
-  SEXP R_fcall = PROTECT(LCONS(f, LCONS( out, LCONS(bracket, R_NilValue))));
+  SEXP R_fcall = PROTECT(LCONS(f, LCONS(out, LCONS(bracket, R_NilValue))));
   pCalls += 2;
 
-  /* reduce the list */
+  /* reduce the list (using R's 1-based indexing) */
   for(int i=2; i<=n; ++i){
     INTEGER(ii)[0] = i;
     out = eval(R_fcall,rho);

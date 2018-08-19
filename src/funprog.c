@@ -10,47 +10,29 @@ SEXP Reduce_Simple_C(SEXP f, SEXP x, SEXP rho){
 
   size_t pCalls = 0;
 
-  /* index of where we are in the input vector(list) */
-  //SEXP ind = PROTECT(allocVector(INTSXP, 1));
-  //pCalls += 1;
-
   /* allocate output vector */
   size_t n = length(x);
 
   /* this part: out <- x[[1]] */
-  SEXP outSym  = PROTECT(install("out"));
-  SEXP outVal =  PROTECT(VECTOR_ELT(x,0));
-  defineVar(outSym,outVal,rho);
-  //Rprintf("out is now: %i\n",asInteger(outVal));
-  pCalls += 2;
+  SEXP out =  PROTECT(VECTOR_ELT(x,0));
+  pCalls += 1;
 
   /* make a symbol-value for the "i" part of [[i]] */
-  SEXP iSym = PROTECT(install("i"));
-  SEXP iVal = PROTECT(ScalarInteger(1));
-  defineVar(iSym,iVal,rho);
-  pCalls += 2;
+  SEXP ii = PROTECT(ScalarInteger(1));
+  pCalls += 1;
 
   /* make the part to do: f(out, x[[i]]) */
-  SEXP bracket = PROTECT(LCONS(R_Bracket2Symbol, LCONS(x, LCONS(iSym, R_NilValue)))); /* x[[i]] */
-  SEXP R_fcall = PROTECT(LCONS(f, LCONS( outSym, LCONS(bracket, R_NilValue))));
+  SEXP bracket = PROTECT(LCONS(R_Bracket2Symbol, LCONS(x, LCONS(ii, R_NilValue)))); /* x[[i]] */
+  SEXP R_fcall = PROTECT(LCONS(f, LCONS( out, LCONS(bracket, R_NilValue))));
   pCalls += 2;
 
-  Rprintf("starting the loop\n");
+  /* reduce the list */
   for(int i=2; i<=n; ++i){
-    INTEGER(iVal)[0] = i;
-    Rprintf("we are at INTEGER(iVal)[0]: %i\n",INTEGER(iVal)[0]);
-    //SETCADDR(R_fcall,bracket);
-    outVal = eval(R_fcall,rho);
-    defineVar(outSym,outVal,rho);
-    //Rprintf("out is now: %i\n",asInteger(outVal));
+    INTEGER(ii)[0] = i;
+    out = eval(R_fcall,rho);
+    SETCADR(R_fcall,out);
   }
 
   UNPROTECT(pCalls);
-  return outVal;
+  return out;
 };
-
-//out <- x[[1]]
-//for(i in seq(2, length(x))) {
-//  out <- f(out, x[[i]])
-//}
-//out

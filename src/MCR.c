@@ -20,41 +20,31 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   double sR = asReal(sR_R);
   double sB = asReal(sB_R);
 
-  // printf("c: %f, pH: %f, prR: %f, sH: %f, sR: %f, sB: %f \n",c,pH,prR,sH,sR,sB);
-
   /* number of generations to run simulation */
   int gens = asInteger(gens_R);
-
-  // printf("gens: %i\n",gens);
 
   /* derived parameters */
   double pR = (1.0 - pH)*prR;
   double pB = (1.0 - pH)*(1.0 - prR);
 
-  // printf("pR: %f, pB: %f\n",pR,pB);
-
   /* vectors of total populations */
   int flen = length(GFPp_ym_F_R);
-  // printf("flen: %i\n",flen);
   double Total_F[flen];
   double* GFPp_ym_F_R_ptr = REAL(GFPp_ym_F_R);
   double* GFPp_yp_F_R_ptr = REAL(GFPp_yp_F_R);
   double* GFPm_ym_F_R_ptr = REAL(GFPm_ym_F_R);
   double* GFPm_yp_F_R_ptr = REAL(GFPm_yp_F_R);
   for(int i=0; i <flen; i++){
-    // printf("i: %i, assigning to Total_F to: %f ",i,(GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i]));
     Total_F[i] = GFPp_ym_F_R_ptr[i] + GFPp_yp_F_R_ptr[i] + GFPm_ym_F_R_ptr[i] + GFPm_yp_F_R_ptr[i];
   }
 
   int mlen = length(GFPp_ym_M_R);
-  // printf("\nmlen: %i\n",mlen);
   double Total_M[mlen];
   double* GFPp_ym_M_R_ptr = REAL(GFPp_ym_M_R);
   double* GFPp_yp_M_R_ptr = REAL(GFPp_yp_M_R);
   double* GFPm_ym_M_R_ptr = REAL(GFPm_ym_M_R);
   double* GFPm_yp_M_R_ptr = REAL(GFPm_yp_M_R);
   for(int i=0; i <mlen; i++){
-    // printf("i: %i, assigning to Total_M to: %f ",i,(GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i]));
     Total_M[i] = GFPp_ym_M_R_ptr[i] + GFPp_yp_M_R_ptr[i] + GFPm_ym_M_R_ptr[i] + GFPm_yp_M_R_ptr[i];
   }
 
@@ -64,8 +54,6 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   for(int i=0; i<mlen; i++){
     Total[i] = Total_F[i] + Total_M[i];
   }
-
-  // printf("\ndone assigning Total\n");
 
   /* initial genotype numbers */
   double HY[(gens+1)];
@@ -115,8 +103,6 @@ SEXP C_logLike_MCRMod(SEXP c_R, SEXP pH_R, SEXP prR_R, SEXP sH_R, SEXP sR_R, SEX
   GFPm_ym_M_Pred[0] = BY[0];
   double GFPm_yp_M_Pred[(gens+1)];
   GFPm_yp_M_Pred[0] = RY[0] + WY[0];
-
-  // printf("starting dynamic model!");
 
   /* poulation dynamic model */
   for(int i=1; i < (gens+1); i++){

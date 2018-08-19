@@ -6,8 +6,10 @@
 #ifndef ENVIR_H
 #define ENVIR_H
 
+#include <R.h>
+#include <Rdefines.h>
 #include <Rinternals.h>
-#include <R_ext/Rdynload.h>
+#include <Rmath.h>
 
   /* ################################################################################
   * BEGIN UTILITY FUNCTIONS
@@ -93,5 +95,14 @@ static void HashTableValues(SEXP table, int all, SEXP values, int *indx)
 /* ################################################################################
 * END UTILITY FUNCTIONS
 ################################################################################ */
+
+
+/* ################################################################################
+* BEGIN USER-FACING FUNCTIONS
+################################################################################ */
+
+/* apply a function f to all elements in a hashed envir for side-effects (no return value) */
+SEXP eapply_fast_C(SEXP e, SEXP f, SEXP rho);
+
 
 #endif

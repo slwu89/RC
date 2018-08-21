@@ -24,6 +24,7 @@ SEXP eapply_fast_C(SEXP e, SEXP f, SEXP rho){
 
   /* make the bit of the function call that indexes over the values in the hash table */
   SEXP i = ScalarInteger(1);
+  int* iptr = INTEGER(i);
   SEXP bracket;
   PROTECT(bracket = LCONS(R_Bracket2Symbol, LCONS(vals, LCONS(i, R_NilValue))));
   pCalls += 1;
@@ -35,7 +36,7 @@ SEXP eapply_fast_C(SEXP e, SEXP f, SEXP rho){
 
   /* map the function(...) over the hash table (note using R's 1-based indexing) */
   for(int j=1; j<=n; j++){
-    INTEGER(i)[0] = j;
+    *iptr = j;
     eval(R_fcall, rho);
   };
 

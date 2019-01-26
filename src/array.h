@@ -16,7 +16,9 @@
 #include <stdio.h>
 
 /* subset a 3d array (3-tensor) */
-SEXP sub_array3_C(SEXP i, SEXP j, SEXP k, SEXP arr);
+SEXP sub_array3_C(SEXP iR, SEXP jR, SEXP kR, SEXP arrR);
 
+/* subset a 4d array (4-tensor) */
+SEXP sub_array4_C(SEXP iR, SEXP jR, SEXP kR, SEXP lR, SEXP arrR);
 
 #endif

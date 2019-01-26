@@ -4,11 +4,12 @@
 \alias{logLike_AllExpts}
 \title{MCR model log likelihood for all experiments (interface to C)}
 \usage{
-logLike_AllExpts(c, pH, prR, sH, sR, sB, GFPp_ym_1_F, GFPp_yp_1_F, GFPm_ym_1_F,
-  GFPm_yp_1_F, GFPp_ym_1_M, GFPp_yp_1_M, GFPm_ym_1_M, GFPm_yp_1_M, GFPp_ym_2_F,
-  GFPp_yp_2_F, GFPm_ym_2_F, GFPm_yp_2_F, GFPp_ym_2_M, GFPp_yp_2_M, GFPm_ym_2_M,
-  GFPm_yp_2_M, GFPp_ym_3_F, GFPp_yp_3_F, GFPm_ym_3_F, GFPm_yp_3_F, GFPp_ym_3_M,
-  GFPp_yp_3_M, GFPm_ym_3_M, GFPm_yp_3_M, GFPp_ym_4_F, GFPp_yp_4_F, GFPm_ym_4_F,
+logLike_AllExpts(c, pH, prR, sH, sR, sB, GFPp_ym_1_F, GFPp_yp_1_F,
+  GFPm_ym_1_F, GFPm_yp_1_F, GFPp_ym_1_M, GFPp_yp_1_M, GFPm_ym_1_M,
+  GFPm_yp_1_M, GFPp_ym_2_F, GFPp_yp_2_F, GFPm_ym_2_F, GFPm_yp_2_F,
+  GFPp_ym_2_M, GFPp_yp_2_M, GFPm_ym_2_M, GFPm_yp_2_M, GFPp_ym_3_F,
+  GFPp_yp_3_F, GFPm_ym_3_F, GFPm_yp_3_F, GFPp_ym_3_M, GFPp_yp_3_M,
+  GFPm_ym_3_M, GFPm_yp_3_M, GFPp_ym_4_F, GFPp_yp_4_F, GFPm_ym_4_F,
   GFPm_yp_4_F, GFPp_ym_4_M, GFPp_yp_4_M, GFPm_ym_4_M, GFPm_yp_4_M, gens)
 }
 \description{

@@ -1,2 +1,2 @@
 PKG_CFLAGS += -std=c11 -g
-PKG_LIBS += -L/usr/lib -L/usr/local/lib -lgsl
+PKG_LIBS += -L/usr/lib -L/usr/local/lib

@@ -16,4 +16,7 @@
 #include <Rinternals.h>
 #include <Rmath.h>
 
+/* aquatic population dynamics */
+void oneDay_oviposit_C(SEXP cube);
+
 #endif

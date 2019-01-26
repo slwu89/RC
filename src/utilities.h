@@ -14,4 +14,7 @@
 /* https://github.com/sbfnk/dynmod/blob/master/src/utilities.c */
 SEXP getListElement(SEXP list, const char *str);
 
+/* get named element of environment */
+SEXP getvar(SEXP name, SEXP rho);
+
 #endif

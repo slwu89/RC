@@ -22,3 +22,19 @@
 eapply_fast <- function(env,fn,...){
   invisible(.Call(eapply_fast_C,env,fn,new.env()))
 }
+
+#' return a named element of an environment
+#'
+#' this function's source is actually in utilities.h/c
+#'
+#' @examples
+#' \dontrun{
+#' e <- new.env(hash = T)
+#' e$thing <- rpois(n = 5,lambda = 10)
+#' get_fromEnv("thing",env)
+#' }
+#' @useDynLib RC getvar
+#' @export
+get_fromEnv <- function(name,env){
+  .Call(getvar,name,env)
+}

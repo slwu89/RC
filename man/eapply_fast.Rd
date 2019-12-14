@@ -16,8 +16,8 @@ for(a in LETTERS[1:10]){
   assign(x = a,value = rpois(n = 5,lambda = 10),envir = e)
  }
  fn <- function(x,msg){
- cat(msg,"\\n")
- cat(x,"\\n")
+ cat(msg,"\n")
+ cat(x,"\n")
  }
 eapply_fast(env = e,fn = fn,msg = "hi")
 }

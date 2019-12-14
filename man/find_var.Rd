@@ -25,7 +25,7 @@ Person <- R6Class("Person",
                       self$hair <- val
                     },
                     greet = function() {
-                      cat(paste0("Hello, my name is ", self$name, ".\\n"))
+                      cat(paste0("Hello, my name is ", self$name, ".\n"))
                     },
                     greet2 = function(){
                       RC::find_var(private,"z")

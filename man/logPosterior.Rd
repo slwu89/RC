@@ -4,13 +4,47 @@
 \alias{logPosterior}
 \title{MCR model log target posterior distribution (interface to C)}
 \usage{
-logPosterior(c, pH, prR, sH, sR, sB, GFPp_ym_F_1, GFPp_yp_F_1, GFPm_ym_F_1,
-  GFPm_yp_F_1, GFPp_ym_M_1, GFPp_yp_M_1, GFPm_ym_M_1, GFPm_yp_M_1,
-  GFPp_ym_F_2, GFPp_yp_F_2, GFPm_ym_F_2, GFPm_yp_F_2, GFPp_ym_M_2,
-  GFPp_yp_M_2, GFPm_ym_M_2, GFPm_yp_M_2, GFPp_ym_F_3, GFPp_yp_F_3,
-  GFPm_ym_F_3, GFPm_yp_F_3, GFPp_ym_M_3, GFPp_yp_M_3, GFPm_ym_M_3,
-  GFPm_yp_M_3, GFPp_ym_F_4, GFPp_yp_F_4, GFPm_ym_F_4, GFPm_yp_F_4,
-  GFPp_ym_M_4, GFPp_yp_M_4, GFPm_ym_M_4, GFPm_yp_M_4, gens)
+logPosterior(
+  c,
+  pH,
+  prR,
+  sH,
+  sR,
+  sB,
+  GFPp_ym_F_1,
+  GFPp_yp_F_1,
+  GFPm_ym_F_1,
+  GFPm_yp_F_1,
+  GFPp_ym_M_1,
+  GFPp_yp_M_1,
+  GFPm_ym_M_1,
+  GFPm_yp_M_1,
+  GFPp_ym_F_2,
+  GFPp_yp_F_2,
+  GFPm_ym_F_2,
+  GFPm_yp_F_2,
+  GFPp_ym_M_2,
+  GFPp_yp_M_2,
+  GFPm_ym_M_2,
+  GFPm_yp_M_2,
+  GFPp_ym_F_3,
+  GFPp_yp_F_3,
+  GFPm_ym_F_3,
+  GFPm_yp_F_3,
+  GFPp_ym_M_3,
+  GFPp_yp_M_3,
+  GFPm_ym_M_3,
+  GFPm_yp_M_3,
+  GFPp_ym_F_4,
+  GFPp_yp_F_4,
+  GFPm_ym_F_4,
+  GFPm_yp_F_4,
+  GFPp_ym_M_4,
+  GFPp_yp_M_4,
+  GFPm_ym_M_4,
+  GFPm_yp_M_4,
+  gens
+)
 }
 \description{
 MCR model log target posterior distribution (interface to C)
